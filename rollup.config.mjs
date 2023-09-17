@@ -7,10 +7,12 @@ import commonjs from "@rollup/plugin-commonjs";
 import typescript from "@rollup/plugin-typescript";
 import replace from "@rollup/plugin-replace";
 import terser from "@rollup/plugin-terser";
+import image from "@rollup/plugin-image";
 
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
 import generatePackageJson from "rollup-plugin-generate-package-json";
 
+// plugins used for the whole lib
 const getPlugins = (opts = {}) => {
   return [
     peerDepsExternal(),
@@ -20,10 +22,12 @@ const getPlugins = (opts = {}) => {
     }),
     commonjs(),
     typescript({ tsconfig: "./tsconfig.json", ...opts.ts }),
+    image(),
     terser(),
   ];
 };
 
+// we need to generate package.json for every component
 const getComponentPlugins = (dir) => [
   ...getPlugins({ ts: { declaration: false } }), // declaration: false is important here, otherwise we get bad output structure
   generatePackageJson({
